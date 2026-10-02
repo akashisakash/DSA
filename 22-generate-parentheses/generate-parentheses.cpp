@@ -1,19 +1,24 @@
 class Solution {
 public:
-    vector<string>result;
-    
-    void helper(int open,int close,int n,string current)
-    {
-        if(current.length()==n*2)
-        {
-            result.push_back(current);
-            return;
-        }
-        if(open<n)  helper(open+1,close,n,current+"(");
-        if(close<open)  helper(open,close+1,n,current+")");
-    }
     vector<string> generateParenthesis(int n) {
-        helper(0,0,n,"");
-        return result;
+        if (n-- == 1) return {"()"};
+
+        vector<string> res;
+        auto dfs = [&](auto& self, int O, int C, string s) -> void {
+            if (O == 0 && C == 0) {
+                res.push_back(s + ")");
+                return;
+            }
+
+            if (O > 0)
+                self(self, O - 1, C, s + "(");
+
+            if (C >= O)
+                self(self, O, C - 1, s + ")");
+        };
+
+        dfs(dfs, n, n, "(");
+
+        return res;
     }
 };
